@@ -4,7 +4,7 @@
 Ansible Role - Singularity Registry
 =========
 
-It provides a totally customizable Ansible role for the installation of Nomad. If the variable ```create_nomad_service``` is ```true```, this role creates a Linux service.  
+It provides a totally customizable Ansible role for the installation of Singularity Registry.
 
 Role Variables
 --------------
