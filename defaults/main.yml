@@ -1,0 +1,35 @@
+---
+# Installation vars
+sregistry_branch: 'master'
+sregistry_dir: '/opt/sregistry-{{ sregistry_branch }}'
+
+sregistry_token: ''
+
+# https://github.com/singularityhub/sregistry/blob/master/shub/settings/dummy_secrets.py
+sregistry_secrets_vars: 
+  - { option: 'SECRET_KEY', value: "{{ sregistry_token }}" }
+
+# https://github.com/singularityhub/sregistry/blob/master/shub/settings/config.py
+sregistry_config_vars: 
+  - { option: 'ENABLE_GOOGLE_AUTH', value: False}
+  - { option: 'ENABLE_TWITTER_AUTH', value: False}
+  - { option: 'ENABLE_GITHUB_AUTH', value: False}
+  - { option: 'ENABLE_GITLAB_AUTH', value: False}
+  - { option: 'DOMAIN_NAME', value: 'http://127.0.0.1'}
+  - { option: 'DOMAIN_NAME_HTTP', value: 'http://127.0.0.1'}
+  - { option: 'HELP_CONTACT_EMAIL', value: 'dummy@dummy.com'}
+  - { option: 'HELP_INSTITUTION_SITE', value: 'http://www.dummy.com'}
+  - { option: 'REGISTRY_NAME', value: 'My Sigularity registry'}
+  - { option: 'REGISTRY_URI', value: 'singregistry'}
+  - { option: 'USER_COLLECTIONS', value: True}
+  - { option: 'USER_COLLECTION_LIMIT', value: 2}
+  - { option: 'PRIVATE_ONLY', value: True}
+  - { option: 'DEFAULT_PRIVATE', value: True}
+
+sregistry_use_docker: True
+sregistry-cli_branch: 'master'
+sregistry-cli_dir: '/opt/sregistry-cli-{{ sregistry-cli_branch }}'
+
+  
+
+

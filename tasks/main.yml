@@ -1,0 +1,17 @@
+---
+
+- name: "Checks system"
+  include: checks.yml
+
+- name: "Install role requeriments"
+  include: requeriments.yml
+
+- name: "Install and configure Singularity registry"  
+  include: sregistry.yml
+  when: sregistry_is_installed is failed
+
+- name: "Install and configure Singularity registry CLI"  
+  include: sregistry-cli.yml
+  when: sregistry-cli_is_installed is failed
+
+

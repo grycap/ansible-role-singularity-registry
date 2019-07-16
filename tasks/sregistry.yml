@@ -1,0 +1,58 @@
+
+- name: "Clone sregistry git repo - {{ sregistry_branch }}"
+  git:
+    repo: 'https://github.com/singularityhub/sregistry.git'
+    dest: "{{ sregistry_dir }}"
+    version: "{{ sregistry_branch }}"
+
+- name: "Create the secrets.py file"
+  copy:
+      src: "{{ sregistry_dir }}/shub/settings/dummy_secrets.py"
+      dest: "{{ sregistry_dir }}/shub/settings/secrets.py"
+      owner: root
+      group: root
+      mode: 0644
+
+- block:
+  - name: "Generate secret token for sregistry"
+    command: "uuid"
+    register: output
+
+  - name: "Create facts"
+    set_fact: 
+      sregistry_token: "{{ output.stdout }}"
+
+  - name: "Set token variable in secrets.py file"
+    ini_file: 
+      dest: "{{ sregistry_dir }}/shub/settings/secrets.py"
+      section: null
+      option: 'SECRET_KEY'
+      value: "'{{ sregistry_token }}'"
+  when: sregistry_token == ''
+
+- name: "Set variables in secrets.py file"
+  ini_file: 
+    dest: "{{ sregistry_dir }}/shub/settings/secrets.py"
+    section: null
+    option: "{{ item.option }}"
+    value: "'{{ item.value }}'"
+  with_items: "{{ sregistry_secrets_vars }}"
+
+- name: "Set variables in config.py file"
+  ini_file: 
+    dest: "{{ sregistry_dir }}/shub/settings/config.py"
+    section: null
+    option: "{{ item.option }}"
+    value: "'{{ item.value }}'"
+  with_items: "{{ sregistry_config_vars }}"
+  
+- name: Build image 
+  docker_image:
+    name: vanessa/sregistry
+    build:
+      path: "{{ sregistry_dir }}"
+    source: build
+
+- docker_compose:
+    project_src: "{{ sregistry_dir }}"
+    state: present

@@ -1,0 +1,22 @@
+---
+- name: Checking distribution 
+  fail:
+    msg: "{{ ansible_distribution }} is not supported"
+  when: ansible_distribution not in os_valid_distributions
+
+- name: Checking version of OS
+  fail:
+    msg: "{{ ansible_distribution_version}} of {{ ansible_distribution }} is not supported"
+  when: ansible_distribution_version|version_compare(os_minimum_versions[ansible_distribution], '<')
+
+- name: Checking is sregistry is installed
+  command: "ls {{ sregistry_dir }}"
+  register: sregistry-cli_is_installed
+  ignore_errors: True
+
+- name: Checking is sregistry-cli is installed
+  command: sregistry --version
+  register: sregistry-cli_is_installed
+  ignore_errors: True
+
+  

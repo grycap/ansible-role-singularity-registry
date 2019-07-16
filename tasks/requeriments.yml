@@ -1,0 +1,35 @@
+- name: "Install required packages on RedHat"
+  yum:
+    pkg: "{{ item }}"
+    state: latest
+  when: "ansible_os_family == 'RedHat'"
+  with_items:
+    - unzip
+    - gzip
+    - git
+    - python
+    - python-pip
+    - docker-compose
+    - uuid
+
+- name: "Install required packages on Debian"
+  apt:
+    pkg: "{{ item }}" 
+    state: latest
+  when: "ansible_os_family == 'Debian'"
+  with_items:
+    - unzip
+    - gzip
+    - git
+    - python
+    - python-pip
+    - docker-compose
+    - uuid
+
+- name: "Install pip packages"
+  pip: name={{item}} state=latest executable=pip
+  with_items:
+    - ipaddress 
+    - oauth2client
+    - docker
+    

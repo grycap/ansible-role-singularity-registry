@@ -1,0 +1,27 @@
+
+- name: "Clone sregistry-cli git repo - {{ sregistry-cli_branch }}"
+  git:
+    repo: 'https://github.com/singularityhub/sregistry-cli.git'
+    dest: "{{ sregistry-cli_dir }}"
+    version: "{{ sregistry-cli_branch }}"
+
+- block:
+  - name: "Install sregistry-cli"
+    command: python setup.py install
+    args:
+      chdir: "{{ sregistry-cli_dir }}"
+  when: not sregistry_use_docker
+
+- block:
+  - name: Build image 
+    docker_image:
+      name: vanessa/sregistry-cli
+      build:
+        path: "{{ sregistry-cli_dir }}"
+      source: build
+  - name: Create alias in .bashrc
+    lineinfile:
+      path: /root/.bashrc
+      regexp: '^alias sregistry="docker run '
+      line: 'alias sregistry="docker run -i --network=host -e SREGISTRY_CLIENT=registry --privileged vanessa/sregistry-cli"'
+  when: sregistry_use_docker 

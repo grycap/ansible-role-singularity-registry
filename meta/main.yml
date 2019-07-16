@@ -1,0 +1,22 @@
+galaxy_info:
+  author: serlohu@upv.es
+  description: Installs Singularity Registry (using docker compose) and Singularity Registry CLI
+  company: GRyCAP UPV
+  license: Apache 
+  min_ansible_version: 2.0
+
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  - name: Ubuntu
+    versions:
+    - xenial  
+
+  galaxy_tags:
+    - sregistry
+    - singularity
+    - sregistry-cli
+
+dependencies: 
+  - { role: 'grycap.docker' }
