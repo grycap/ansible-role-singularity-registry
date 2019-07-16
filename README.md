@@ -11,40 +11,6 @@ Role Variables
 
 The variables used for the installation and configuration are described in defaults/main file. 
 
-Example Playbook
-----------------
-
-Deployment of client and server with Consul enabled (and available at 172.17.0.2):
-``` yml
-    - hosts: servers
-      vars:
-        name: server 
-        nomad_user: nomad
-        nomad_group: nomad
-        bind_address: "172.17.0.3"
-        server_enabled: true
-        client_enabled: false
-        use_consul: true
-        consul_address: "172.17.0.2:8500"
-        create_nomad_service: true
-      roles:
-         - { role: grycap.nomad }
-
-    - hosts: clients
-      vars:
-        name: server 
-        nomad_user: nomad
-        nomad_group: nomad
-        bind_address: "172.17.0.4"
-        server_enabled: false
-        client_enabled: true
-        use_consul: true
-        consul_address: "172.17.0.2:8500"
-        create_nomad_service: true
-      roles:
-         - { role: grycap.nomad }
-```
-
 License
 -------
 
