@@ -11,12 +11,12 @@
 
 - name: Checking is sregistry is installed
   command: "ls {{ sregistry_dir }}"
-  register: sregistry-cli_is_installed
+  register: sregistry_is_installed
   ignore_errors: True
 
 - name: Checking is sregistry-cli is installed
   command: sregistry --version
-  register: sregistry-cli_is_installed
+  register: sregistry_cli_is_installed
   ignore_errors: True
 
   

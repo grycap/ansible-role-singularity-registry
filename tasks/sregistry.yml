@@ -21,13 +21,7 @@
   - name: "Create facts"
     set_fact: 
       sregistry_token: "{{ output.stdout }}"
-
-  - name: "Set token variable in secrets.py file"
-    ini_file: 
-      dest: "{{ sregistry_dir }}/shub/settings/secrets.py"
-      section: null
-      option: 'SECRET_KEY'
-      value: "'{{ sregistry_token }}'"
+     
   when: sregistry_token == ''
 
 - name: "Set variables in secrets.py file"
@@ -36,7 +30,10 @@
     section: null
     option: "{{ item.option }}"
     value: "'{{ item.value }}'"
-  with_items: "{{ sregistry_secrets_vars }}"
+  with_items: 
+    - { option: 'SECRET_KEY', value: "{{ sregistry_token }}" }
+    - "{{ sregistry_secrets_vars }}"
+
 
 - name: "Set variables in config.py file"
   ini_file: 
@@ -46,12 +43,20 @@
     value: "'{{ item.value }}'"
   with_items: "{{ sregistry_config_vars }}"
   
-- name: Build image 
+- name: Build image
   docker_image:
     name: vanessa/sregistry
     build:
       path: "{{ sregistry_dir }}"
     source: build
+  when: "ansible_version.full is version_compare('2.8', '>=') "
+
+- name: Build image
+  docker_image:
+    name: vanessa/sregistry
+    path: "{{ sregistry_dir }}"
+  when: "ansible_version.full is version_compare('2.8', '<') "
+
 
 - docker_compose:
     project_src: "{{ sregistry_dir }}"

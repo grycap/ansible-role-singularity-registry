@@ -27,8 +27,8 @@ sregistry_config_vars:
   - { option: 'DEFAULT_PRIVATE', value: True}
 
 sregistry_use_docker: True
-sregistry-cli_branch: 'master'
-sregistry-cli_dir: '/opt/sregistry-cli-{{ sregistry-cli_branch }}'
+sregistry_cli_branch: 'master'
+sregistry_cli_dir: '/opt/sregistry-cli-{{ sregistry_cli_branch }}'
 
   
 
