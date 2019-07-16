@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: singularity-registry
   author: serlohu@upv.es
   description: Installs Singularity Registry (using docker compose) and Singularity Registry CLI
   company: GRyCAP UPV
