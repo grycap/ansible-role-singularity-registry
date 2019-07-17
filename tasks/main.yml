@@ -1,5 +1,4 @@
 ---
-
 - name: "Checks system"
   include: checks.yml
 
@@ -13,5 +12,3 @@
 - name: "Install and configure Singularity registry CLI"  
   include: sregistry-cli.yml
   when: sregistry_cli_is_installed is failed
-
-

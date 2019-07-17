@@ -1,11 +1,10 @@
-
-- name: "Clone sregistry git repo - {{ sregistry_branch }}"
+- name: "sregistry | Clone git repo - {{ sregistry_branch }}"
   git:
-    repo: 'https://github.com/singularityhub/sregistry.git'
+    repo: "{{ sregistry_url }}"
     dest: "{{ sregistry_dir }}"
     version: "{{ sregistry_branch }}"
 
-- name: "Create the secrets.py file"
+- name: "sregistry | Create the secrets.py file"
   copy:
       src: "{{ sregistry_dir }}/shub/settings/dummy_secrets.py"
       dest: "{{ sregistry_dir }}/shub/settings/secrets.py"
@@ -14,17 +13,17 @@
       mode: 0644
 
 - block:
-  - name: "Generate secret token for sregistry"
+  - name: "sregistry | Generate secret token for sregistry"
     command: "uuid"
     register: output
 
-  - name: "Create facts"
+  - name: "sregistry | Create facts"
     set_fact: 
       sregistry_token: "{{ output.stdout }}"
      
   when: sregistry_token == ''
 
-- name: "Set variables in secrets.py file"
+- name: "sregistry | Set variables in secrets.py file"
   ini_file: 
     dest: "{{ sregistry_dir }}/shub/settings/secrets.py"
     section: null
@@ -35,7 +34,7 @@
     - "{{ sregistry_secrets_vars }}"
 
 
-- name: "Set variables in config.py file"
+- name: "sregistry | Set variables in config.py file"
   ini_file: 
     dest: "{{ sregistry_dir }}/shub/settings/config.py"
     section: null
@@ -43,21 +42,38 @@
     value: "'{{ item.value }}'"
   with_items: "{{ sregistry_config_vars }}"
   
-- name: Build image
+- name: "sregistry | create plugins_enab_dict"
+  set_fact:
+    plugins_enab_dict: "{{ plugins_enab_dict|default([]) + [ {'name': item, 'when': item in sregistry_allowed_plugins} ] }}"
+  with_items: "{{ sregistry_plugins_enabled }}"
+
+- name: "sregistry | Create buildargs_dict dict"
+  set_fact:
+    buildargs_dict: "{{ buildargs_dict|default({}) }}"    
+
+- name: "sregistry | Enabling plugins"
+  include: "plugins/{{ item.name }}.yml"
+  when: "item.when"
+  with_items: "{{ plugins_enab_dict }}"
+
+- name: "sregistry | Build image when ansible_version >= 2.8"
   docker_image:
     name: vanessa/sregistry
     build:
       path: "{{ sregistry_dir }}"
+      args: "{{ buildargs_dict }}"
     source: build
   when: "ansible_version.full is version_compare('2.8', '>=') "
 
-- name: Build image
+- name: "sregistry | Build image when ansible_version >= 2.8"
   docker_image:
     name: vanessa/sregistry
     path: "{{ sregistry_dir }}"
+    buildargs: "{{ buildargs_dict }}"
   when: "ansible_version.full is version_compare('2.8', '<') "
 
-- name:
+- name: "sregistry | Run sregistry using docker-compose"
   command: docker-compose up -d
   args:
     chdir: "{{ sregistry_dir }}"
+  when: sregistry_started

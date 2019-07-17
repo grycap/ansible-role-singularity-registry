@@ -18,5 +18,3 @@
   command: sregistry --version
   register: sregistry_cli_is_installed
   ignore_errors: True
-
-  

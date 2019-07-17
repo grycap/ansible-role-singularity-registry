@@ -1,4 +1,4 @@
-- name: "Install required packages on RedHat"
+- name: "requirements | Install required packages on RedHat"
   yum:
     pkg: "{{ item }}"
     state: latest
@@ -12,7 +12,7 @@
     - docker-compose
     - uuid
 
-- name: "Install required packages on Debian"
+- name: "requirements | Install required packages on Debian"
   apt:
     pkg: "{{ item }}" 
     state: latest
@@ -26,10 +26,9 @@
     - docker-compose
     - uuid
 
-- name: "Install pip packages"
+- name: "requirements | Install pip packages"
   pip: name={{item}} state=latest executable=pip
   with_items:
     - ipaddress 
     - oauth2client
     - docker
-    

@@ -1,7 +1,5 @@
 ---
 # vars file for ansible-role-singularity-registry
-
-
 os_valid_distributions:
   - RedHat
   - CentOS
@@ -12,3 +10,5 @@ os_minimum_versions:
   CentOS: 7
   Ubuntu: 16.04
 
+sregistry_allowed_plugins:
+  - pam_auth

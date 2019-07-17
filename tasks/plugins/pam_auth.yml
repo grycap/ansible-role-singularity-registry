@@ -1,0 +1,31 @@
+- name: "sregistry | pam_auth | Uncomment docker-compose.yml"
+  replace:
+    path: "{{ sregistry_dir }}/docker-compose.yml"
+    regexp: "{{ item.regexpp }}"
+    replace: "{{ item.line }}"
+  with_items: 
+    - { regexpp: "    #- /etc/passwd:/etc/passwd*", line: "    - /etc/passwd:/etc/passwd"}
+    - { regexpp: "    #- /etc/shadow:/etc/shadow*", line: "    - /etc/shadow:/etc/shadow"}
+
+- name: "sregistry | pam_auth | Add build-args"
+  set_fact:
+    buildargs_dict: "{{ buildargs_dict|combine( {'ENABLE_PAM': 'true'} )  }}"
+
+- name: "sregistry | pam_auth | create nginx group"
+  group:
+    name: nginx 
+    system: yes
+
+- name: "sregistry | pam_auth | create nginx user"
+  user:
+    name: nginx
+    system: yes
+    home: /var/cache/nginx
+    group: nginx 
+    comment: "nginx user for sregistry"
+
+- name: "sregistry | pam_auth | Uncomment line in config.py"
+  replace:
+    path: "{{ sregistry_dir }}/shub/settings/config.py"
+    regexp: "#    'pam_auth',"
+    replace: "'pam_auth',"

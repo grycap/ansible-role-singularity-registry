@@ -1,19 +1,18 @@
-
-- name: "Clone sregistry-cli git repo - {{ sregistry_cli_branch }}"
+- name: "sregistry-cli | Clone git repo - {{ sregistry_cli_branch }}"
   git:
     repo: 'https://github.com/singularityhub/sregistry-cli.git'
     dest: "{{ sregistry_cli_dir }}"
     version: "{{ sregistry_cli_branch }}"
 
 - block:
-  - name: "Install sregistry-cli"
+  - name: "sregistry-cli | Install sregistry-cli"
     command: python setup.py install
     args:
       chdir: "{{ sregistry_cli_dir }}"
   when: not sregistry_cli_use_docker
 
 - block:
-  - name: Build image
+  - name: "sregistry-cli | Build image when ansible_version >= 2.8"
     docker_image:
       name: vanessa/sregistry-cli
       build:
@@ -21,15 +20,16 @@
       source: build
     when: "ansible_version.full is version_compare('2.8', '>=') "
 
-  - name: Build image
+  - name: "sregistry-cli | Build image when ansible_version < 2.8"
     docker_image:
       name: vanessa/sregistry-cli
       path: "{{ sregistry_cli_dir }}"
     when: "ansible_version.full is version_compare('2.8', '<') "
 
-  - name: Create alias in .bashrc
+  - name: "sregistry-cli | Create alias in .bashrc"
     lineinfile:
       path: /root/.bashrc
       regexp: '^alias sregistry="docker run '
       line: 'alias sregistry="docker run -i --network=host -e SREGISTRY_CLIENT=registry --privileged vanessa/sregistry-cli"'
+    when: sregistry_cli_create_alias
   when: sregistry_cli_use_docker 
