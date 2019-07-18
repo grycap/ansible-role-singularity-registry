@@ -12,3 +12,6 @@ os_minimum_versions:
 
 sregistry_allowed_plugins:
   - pam_auth
+  - google_build
+  - globus
+  - saml_auth 

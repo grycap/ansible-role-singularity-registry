@@ -1,0 +1,9 @@
+- name: "sregistry | saml_auth | Add build-args"
+  set_fact:
+    buildargs_dict: "{{ buildargs_dict|combine( {'ENABLE_SAML': 'true'} )  }}"
+
+- name: "sregistry | saml_auth | Uncomment line in config.py"
+  replace:
+    path: "{{ sregistry_dir }}/shub/settings/config.py"
+    regexp: "#    'saml_auth'"
+    replace: "'saml_auth'"

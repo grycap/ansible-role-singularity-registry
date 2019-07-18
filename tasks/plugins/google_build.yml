@@ -1,0 +1,9 @@
+- name: "sregistry | google_build | Add build-args"
+  set_fact:
+    buildargs_dict: "{{ buildargs_dict|combine( {'ENABLE_GOOGLEBUILD': 'true'} )  }}"
+
+- name: "sregistry | google_build | Uncomment line in config.py"
+  replace:
+    path: "{{ sregistry_dir }}/shub/settings/config.py"
+    regexp: "#    'google_build'*"
+    replace: "'google_build'"

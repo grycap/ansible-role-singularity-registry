@@ -7,8 +7,8 @@
 
 - name: "Install and configure Singularity registry"  
   include: sregistry.yml
-  when: sregistry_is_installed is failed
+  when: (sregistry_is_installed is failed) and (install_sregistry)
 
 - name: "Install and configure Singularity registry CLI"  
   include: sregistry-cli.yml
-  when: sregistry_cli_is_installed is failed
+  when: (sregistry_cli_is_installed is failed) and (install_sregistry_cli)

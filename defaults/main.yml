@@ -1,10 +1,14 @@
 ---
 
 # Singularity Registry variables
-sregistry_branch: 'master'
-sregistry_dir: '/opt/sregistry-{{ sregistry_branch }}'
+install_sregistry: True // If false, sregistry do not be installed and configured
+
 sregistry_url: 'https://github.com/singularityhub/sregistry.git'
-sregistry_token: ''
+sregistry_branch: 'master'
+
+sregistry_dir: '/opt/sregistry-{{ sregistry_branch }}'
+
+sregistry_token: '' 
 sregistry_started: True
 
 # https://github.com/singularityhub/sregistry/blob/master/shub/settings/dummy_secrets.py
@@ -31,7 +35,9 @@ sregistry_config_vars:
 sregistry_plugins_enabled: []
 
 # Singularity Registry CLI variables
-sregistry_use_docker: True
+install_sregistry_cli: True // If false, sregistry-cli do not be installed and configured
+sregistry_cli_use_docker: True
 sregistry_cli_create_alias: False
+sregistry_cli_url: 'https://github.com/singularityhub/sregistry-cli.git'
 sregistry_cli_branch: 'master'
 sregistry_cli_dir: '/opt/sregistry-cli-{{ sregistry_cli_branch }}'

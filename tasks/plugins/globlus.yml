@@ -1,0 +1,9 @@
+- name: "sregistry | globlus | Add build-args"
+  set_fact:
+    buildargs_dict: "{{ buildargs_dict|combine( {'ENABLE_GLOBUS': 'true'} )  }}"
+
+- name: "sregistry | globlus | Uncomment line in config.py"
+  replace:
+    path: "{{ sregistry_dir }}/shub/settings/config.py"
+    regexp: "#    'globlus',"
+    replace: "'globlus'"
